@@ -1,0 +1,23 @@
+{
+  "name": "roman-encryption",
+  "version": "1.0.0",
+  "description": "A web API for a new kind of encryption",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/woofiewilly/roman-encryption.git"
+  },
+  "author": "Brooks Van Buren",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/woofiewilly/roman-encryption/issues"
+  },
+  "homepage": "https://github.com/woofiewilly/roman-encryption#readme",
+  "dependencies": {
+    "express": "^4.13.4",
+    "node": "0.0.0"
+  }
+}
