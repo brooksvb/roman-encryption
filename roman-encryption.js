@@ -48,8 +48,17 @@ function encrypt(number, threshhold, size) {
   @param threshhold: threshhold that was used in encryption
 */
 function decrypt(numbers, threshhold) {
-
-
+  var last, curr, total;
+  last = numbers[0];
+  total = numbers[0];
+  for (var i = 1; i < numbers.size; i++) {
+    curr = numbers[i];
+    if (last < curr && next - last > threshhold) {
+      total -= 2 * last;
+    }
+    total += curr;
+  }
+  return total;
 };
 
 /**
