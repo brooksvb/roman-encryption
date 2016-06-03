@@ -1,11 +1,15 @@
 var express = require('express');
 var app = express();
-var roman-encryption = require('./roman-encryption');
+var roman = require('./roman-encryption');
 
 /* Middleware for parsing post request body */
 var bodyParser = require('body-parser');
 var multer = require('multer');
 var upload = multer();
+
+var ip = require('dns').lookup(require('os').hostname(), function (err, add, fam) {
+  console.log('addr: ' + add);
+});
 
 function encrypt(number, threshhold, length) {
   return {message:'You entered number = ' + number + ' threshhold = ' + threshhold + ' length = ' + length};
@@ -44,11 +48,14 @@ app.post('/encrypt', upload.array(), function (req, res, next) {
 });
 
 app.post('/decrypt', function (req, res) {
+  if (req.body) console.log('Received at decrypt hook:' + req.body);
+  else console.log('Parsing error at decrypt hook.');
 
 });
 
 // I specify my ipv6 address, otherwise it defaults to listening on my ipv4 address (???)
+// TEMPORARILY REMOVED IPv6 FOR TESTING ON LOCALHOST
 // TODO: is there a way to check my ipv6 address automatically? Instead of updating it myself when it changes?
-app.listen(3000, '2602:306:cdad:b220:195a:4b19:bd61:55b7', function () {
+app.listen(3000,  function () {
   console.log('Example app listening on port 3000!');
 });
