@@ -6,7 +6,7 @@ module.exports = {
     @param threshhold: threshhold to be used in encryption
     @param size: size of desired return array
   */
-  function encrypt(number, threshhold, size) {
+  encrypt: function (number, threshhold, size) {
     var array = [];
     var last, next, total;
 
@@ -42,13 +42,13 @@ module.exports = {
     }
 
     return array;
-  };
+  },
 
   /**
     @param numbers: array of encoded number
     @param threshhold: threshhold that was used in encryption
   */
-  function decrypt(numbers, threshhold) {
+  decrypt: function (numbers, threshhold) {
     var last, curr, total;
     last = numbers[0];
     total = numbers[0];
@@ -60,12 +60,12 @@ module.exports = {
       total += curr;
     }
     return total;
-  };
+  },
 
   /**
     @param places: size of number
   */
-  function getrand(places) {
+  getrand: function (places) {
     var array = new Uint32Array(20);
     window.crypto.getRandomValues(array);
 
@@ -76,7 +76,7 @@ module.exports = {
 
     ret = shiftnum(ret, 10);
     return ret;
-  }
+  },
 
   /**
     @description: shiftnum takes a number and shifts the decimal place to the right until
@@ -86,11 +86,11 @@ module.exports = {
     @param num: number to be shifted
     @param places: number of desired places in number
   */
-  function shiftnum(num, places) {
+  shiftnum: function (num, places) {
     while (num > 10 * (places + 1) - 1) {
       num /= 10;
     }
     Math.floor(num);
     return num;
   }
-}
+};
