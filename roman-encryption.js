@@ -3,10 +3,10 @@ var getRandomValues = require('get-random-values'); // npm package to give crypt
 module.exports = {
   /**
     @param number: number to be encrypted
-    @param threshhold: threshhold to be used in encryption
+    @param threshold: threshold to be used in encryption
     @param size: size of desired return array
   */
-  encrypt: function (number, threshhold, size) {
+  encrypt: function (number, threshold, size) {
     var array = [];
     var last, next, total;
 
@@ -17,23 +17,37 @@ module.exports = {
         array.push(this.getrand());
         last = array[0];
         total = array[0];
-        continue;
 
       } else if (i === size - 1) {
-        //TODO: not working correctly. Fix
-        
+
         var offset = number - total;
-        if (offset <= last + threshhold) {
+        console.log('total = ' + total + ' offset = ' + offset + ' last = ' + last);
+        if (offset <= last + threshold) {
+          console.log('In if');
           next = offset;
         } else {
-          next = offset + last;
+          console.log('In else');
+          next = offset + (2 * last);
         }
         array.push(next);
+
+      } else if (i === size - 2) {
+
+        do {
+          next = this.getrand();
+        } while (next + threshold < threshold + 1)
+
+        array.push(next);
+        if (last < next && next - last > threshold) {
+          total -= 2 * last;
+        }
+        total += next;
+        last = next;
 
       } else {
 
         next = this.getrand();
-        if (last < next && next - last > threshhold) {
+        if (last < next && next - last > threshold) {
           total -= 2 * last;
         }
         total += next;
@@ -47,20 +61,22 @@ module.exports = {
 
   /**
     @param numbers: array of encoded number
-    @param threshhold: threshhold that was used in encryption
+    @param threshold: threshold that was used in encryption
   */
-  decrypt: function (numbers, threshhold) {
+  decrypt: function (numbers, threshold) {
     var last, curr, total;
     last = numbers[0];
     total = numbers[0];
+    console.log(numbers);
     console.log(numbers.length);
     for (var i = 1; i < numbers.length; i++) {
-      console.log('i = ' + i + 'total = ' + total);
       curr = numbers[i];
-      if (last < curr && curr - last > threshhold) {
+      console.log('i = ' + i + ' curr = ' + curr + ' total = ' + total);
+      if (curr > last && curr - last > threshold) {
         total -= 2 * last;
       }
       total += curr;
+      last = curr;
     }
     return total;
   },
