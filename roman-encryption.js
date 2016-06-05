@@ -14,13 +14,14 @@ module.exports = {
 
       if (i === 0) {
 
-        array.push(getrand());
+        array.push(this.getrand());
         last = array[0];
         total = array[0];
         continue;
 
       } else if (i === size - 1) {
-
+        //TODO: not working correctly. Fix
+        
         var offset = number - total;
         if (offset <= last + threshhold) {
           next = offset;
@@ -31,7 +32,7 @@ module.exports = {
 
       } else {
 
-        next = getrand();
+        next = this.getrand();
         if (last < next && next - last > threshhold) {
           total -= 2 * last;
         }
@@ -52,9 +53,11 @@ module.exports = {
     var last, curr, total;
     last = numbers[0];
     total = numbers[0];
-    for (var i = 1; i < numbers.size; i++) {
+    console.log(numbers.length);
+    for (var i = 1; i < numbers.length; i++) {
+      console.log('i = ' + i + 'total = ' + total);
       curr = numbers[i];
-      if (last < curr && next - last > threshhold) {
+      if (last < curr && curr - last > threshhold) {
         total -= 2 * last;
       }
       total += curr;
@@ -66,15 +69,15 @@ module.exports = {
     @param places: size of number
   */
   getrand: function (places) {
-    var array = new Uint32Array(20);
-    window.crypto.getRandomValues(array);
+    var array = new Uint8Array(20);
+    getRandomValues(array);
 
     var ret = array[0];
     for (var i = 1; i < array.size; i++) {
       ret *= array[i];
     }
 
-    ret = shiftnum(ret, 10);
+    ret = this.shiftnum(ret, 10);
     return ret;
   },
 
@@ -90,7 +93,14 @@ module.exports = {
     while (num > 10 * (places + 1) - 1) {
       num /= 10;
     }
-    Math.floor(num);
+    num = Math.floor(num);
     return num;
+  },
+
+  test: function() {
+    var array = new Uint8Array(10);
+    getRandomValues(array);
+    console.log(array[0]);
+    return;
   }
 };

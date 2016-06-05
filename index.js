@@ -26,31 +26,45 @@ app.get('/', function (req, res) {
 // I don't entirely understand why upload.array() is necessary, but it is from multer
 app.post('/encrypt', upload.array(), function (req, res, next) {
   var number = 'nothing';
-  // try {
-    if (req.body.number) number = req.body.number;
-  // } catch (e) {
-  //   console.log('Error in parsing.');
-  //   req.send({message: 'Error in parsing.'});
-  // }
-  res.send({message:'You entered number =' + number, butt: 'hole'});
-  // var data = {
-  //   number: req.body.number,
-  //   threshhold: req.body.threshhold,
-  //   length: 10 // Default length of returned array
-  // };
-  // if (req.body.length) data.length = req.body.length;
-  // var ret;
-  // if ((ret = encrypt(data.number, data.threshhold, data.length))) {
-  //   res.send(ret);
-  // } else {
-  //   res.send('error has occured in encryption');
-  // }
+  var threshhold = 'nothing';
+  var size = 'nothing';
+
+  if (req.body.number) number = req.body.number;
+  else res.send({message:'ERROR: You must supply a number.'})
+
+  if (req.body.threshhold) threshhold = req.body.threshhold;
+  else threshhold = 0;
+
+  if (req.body.size) size = req.body.size;
+  else size = 50;
+
+  var array;
+  array = roman.encrypt(number, threshhold, size);
+
+
+  res.send({message:('Encrypted with number = ' + number + ' threshhold = ' +
+  threshhold + ' size = ' + size + '.'), encrypt:array});
 });
 
-app.post('/decrypt', function (req, res) {
-  if (req.body) console.log('Received at decrypt hook:' + req.body);
+app.post('/decrypt', upload.array(), function (req, res, next) {
+  if (req.body) console.log('Received at decrypt hook: ' + JSON.stringify(req.body));
   else console.log('Parsing error at decrypt hook.');
 
+  var array, threshhold;
+
+  if (req.body.array) array = JSON.parse(req.body.array);
+  else req.send({message:'Missing array.'});
+
+  if (req.body.threshhold) threshhold = req.body.threshhold;
+  else req.send({message:'Can\'t decrypt without threshhold.'});
+
+  number = roman.decrypt(array, threshhold);
+
+  res.send({message:'Successfully decrypted.',number:this.number});
+});
+
+app.post('/test', upload.array(), function(req, res, next) {
+  roman.test();
 });
 
 // I specify my ipv6 address, otherwise it defaults to listening on my ipv4 address (???)
