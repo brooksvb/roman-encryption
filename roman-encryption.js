@@ -21,12 +21,9 @@ module.exports = {
       } else if (i === size - 1) {
 
         var offset = number - total;
-        console.log('total = ' + total + ' offset = ' + offset + ' last = ' + last);
         if (offset <= last + threshold) {
-          console.log('In if');
           next = offset;
         } else {
-          console.log('In else');
           next = offset + (2 * last);
         }
         array.push(next);
@@ -67,8 +64,6 @@ module.exports = {
     var last, curr, total;
     last = numbers[0];
     total = numbers[0];
-    console.log(numbers);
-    console.log(numbers.length);
     for (var i = 1; i < numbers.length; i++) {
       curr = numbers[i];
       console.log('i = ' + i + ' curr = ' + curr + ' total = ' + total);
@@ -85,15 +80,14 @@ module.exports = {
     @param places: size of number
   */
   getrand: function (places) {
-    var array = new Uint8Array(20);
+    var array = new Uint8Array(10);
     getRandomValues(array);
-
     var ret = array[0];
-    for (var i = 1; i < array.size; i++) {
+    for (var i = 1; i < array.length; i++) {
       ret *= array[i];
     }
-
     ret = this.shiftnum(ret, 10);
+    ret *= this.posOrNeg();
     return ret;
   },
 
@@ -106,17 +100,18 @@ module.exports = {
     @param places: number of desired places in number
   */
   shiftnum: function (num, places) {
-    while (num > 10 * (places + 1) - 1) {
+    while (num > Math.pow(10, places) - 1) {
       num /= 10;
     }
     num = Math.floor(num);
     return num;
   },
 
-  test: function() {
-    var array = new Uint8Array(10);
-    getRandomValues(array);
-    console.log(array[0]);
-    return;
+  /**
+    @description: has a 50/50 chance of either returning -1 or 1
+  */
+  posOrNeg: function () {
+    var ret = (Math.random() < .5) ? 1 : -1;
+    return ret;
   }
 };

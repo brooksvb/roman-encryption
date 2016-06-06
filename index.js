@@ -29,10 +29,10 @@ app.post('/encrypt', upload.array(), function (req, res, next) {
   var threshhold = 'nothing';
   var size = 'nothing';
 
-  if (req.body.number) number = req.body.number;
+  if (req.body.number) number = parseInt(req.body.number);
   else res.send({message:'ERROR: You must supply a number.'})
 
-  if (req.body.threshhold) threshhold = req.body.threshhold;
+  if (req.body.threshhold) threshhold = parseInt(req.body.threshhold);
   else threshhold = 0;
 
   if (req.body.size) size = req.body.size;
