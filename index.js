@@ -63,13 +63,11 @@ app.post('/decrypt', upload.array(), function (req, res, next) {
   res.send({message:'Successfully decrypted.',number:this.number});
 });
 
-app.post('/test', upload.array(), function(req, res, next) {
-  roman.test();
-});
-
 // I specify my ipv6 address, otherwise it defaults to listening on my ipv4 address (???)
 // TEMPORARILY REMOVED IPv6 FOR TESTING ON LOCALHOST
 // TODO: is there a way to check my ipv6 address automatically? Instead of updating it myself when it changes?
-app.listen(3000,  function () {
-  console.log('Example app listening on port 3000!');
+// Heroku dynamically assigns a port numbner through the env variables. Use this,
+// otherwise 5000 will be default when run locally
+app.listen(process.env.PORT || 5000,  function () {
+  console.log('Example app listening on port' + process.env.PORT || 5000 + '!');
 });
