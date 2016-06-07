@@ -19,8 +19,8 @@ var ip = require('dns').lookup(require('os').hostname(), function (err, add, fam
   console.log('addr: ' + add);
 });
 
-function encrypt(number, threshhold, length) {
-  return {message:'You entered number = ' + number + ' threshhold = ' + threshhold + ' length = ' + length};
+function encrypt(number, threshold, length) {
+  return {message:'You entered number = ' + number + ' threshold = ' + threshold + ' length = ' + length};
 }
 
 /* These "middleware" allow access to parameters passed in post requests. */
@@ -34,39 +34,39 @@ app.get('/', function (req, res) {
 // I don't entirely understand why upload.array() is necessary, but it is from multer
 app.post('/encrypt', upload.array(), function (req, res, next) {
   var number = 'nothing';
-  var threshhold = 'nothing';
+  var threshold = 'nothing';
   var size = 'nothing';
 
   if (req.body.number) number = parseInt(req.body.number);
   else res.send({message:'ERROR: You must supply a number.'})
 
-  if (req.body.threshhold) threshhold = parseInt(req.body.threshhold);
-  else threshhold = 0;
+  if (req.body.threshold) threshold = parseInt(req.body.threshold);
+  else threshold = 0;
 
   if (req.body.size) size = req.body.size;
   else size = 50;
 
   var array;
-  array = roman.encrypt(number, threshhold, size);
+  array = roman.encrypt(number, threshold, size);
 
 
-  res.send({message:('Encrypted with number = ' + number + ' threshhold = ' +
-  threshhold + ' size = ' + size + '.'), encrypt:array});
+  res.send({message:('Encrypted with number = ' + number + ' threshold = ' +
+  threshold + ' size = ' + size + '.'), encrypt:array});
 });
 
 app.post('/decrypt', upload.array(), function (req, res, next) {
   if (req.body) console.log('Received at decrypt hook: ' + JSON.stringify(req.body));
   else console.log('Parsing error at decrypt hook.');
 
-  var array, threshhold;
+  var array, threshold;
 
   if (req.body.array) array = JSON.parse(req.body.array);
   else req.send({message:'Missing array.'});
 
-  if (req.body.threshhold) threshhold = req.body.threshhold;
-  else req.send({message:'Can\'t decrypt without threshhold.'});
+  if (req.body.threshold) threshold = req.body.threshold;
+  else req.send({message:'Can\'t decrypt without threshold.'});
 
-  number = roman.decrypt(array, threshhold);
+  number = roman.decrypt(array, threshold);
 
   res.send({message:'Successfully decrypted.',number:this.number});
 });
