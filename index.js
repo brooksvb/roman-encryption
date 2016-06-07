@@ -7,6 +7,14 @@ var bodyParser = require('body-parser');
 var multer = require('multer');
 var upload = multer();
 
+var env = process.env.NODE_ENV || 'development';
+if ('development' == env) {
+   // configure stuff here
+    app.use(express.static(__dirname + '/'));
+} else {
+    app.use(express.static(__dirname + '/'));
+}
+
 var ip = require('dns').lookup(require('os').hostname(), function (err, add, fam) {
   console.log('addr: ' + add);
 });
