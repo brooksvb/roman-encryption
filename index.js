@@ -40,7 +40,7 @@ app.post('/encrypt', upload.array(), function (req, res, next) {
   if (req.body.number) number = parseInt(req.body.number);
   else res.send({message:'ERROR: You must supply a number.'})
 
-  if (req.body.threshold) threshold = parseInt(req.body.threshold);
+  if (req.body.threshold) threshold = parseInt(req.body.threshold);good
   else threshold = 0;
 
   if (req.body.size) size = req.body.size;
@@ -61,10 +61,10 @@ app.post('/decrypt', upload.array(), function (req, res, next) {
   var array, threshold;
 
   if (req.body.array) array = JSON.parse(req.body.array);
-  else req.send({message:'Missing array.'});
+  else res.send({message:'Missing array.'});
 
   if (req.body.threshold) threshold = req.body.threshold;
-  else req.send({message:'Can\'t decrypt without threshold.'});
+  else res.send({message:'Can\'t decrypt without threshold.'});
 
   number = roman.decrypt(array, threshold);
 
