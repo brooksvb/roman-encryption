@@ -14,7 +14,7 @@ var ip = require('dns').lookup(require('os').hostname(), function (err, add, fam
 var defaultArraySize = 50;
 
 var format = 'Correct usage of encrypt: \n{number:*number to be encrypted, ' +
-  'threshold:*threshold to be used in encryption, size:*desired length of returned array (default:' + defaultArraySize + ')}\n' +
+  'threshold:*threshold to be used in encryption, size:*desired length of returned array (default is ' + defaultArraySize + ')}\n' +
   'Correct usage of decrypt: \n{array:*encrypted array to decrypt, threshold:*threshold that was used in encryption}';
 
 /**
@@ -30,7 +30,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:true}))
 
 app.get('/', function (req, res) {
-  res.send('Root page');
+  res.render(__dirname + '/index.html');
 });
 
 // I don't entirely understand why upload.array() is necessary, but it is from multer
@@ -83,8 +83,12 @@ app.post('/decrypt', upload.array(), function (req, res, next) {
 
   try {
     array = JSON.parse(req.body.array);
-  } catch (SyntaxError e) {
-    handleError(res, 'array was formatted incorrectly.', 'array was in invalid format. Make sure there is no trailing comma.', 400);
+  } catch (e) {
+    if (e instanceof SyntaxError) {
+      handleError(res, 'array was formatted incorrectly.', 'array was in invalid format. Make sure there is no trailing comma.', 400);
+    } else {
+      handleError(res, 'Unknown error occurred.', 'Unknown error occurred. Contact author for support.', 500);
+    }
   }
 
   if ((threshold = parseInt(req.body.threshold)) === 'NaN') {
