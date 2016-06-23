@@ -31,6 +31,7 @@ var format = 'Correct usage of encrypt: \n{number:*number to be encrypted, ' +
 function handleError(res, reason, message, code) {
   console.log("ERROR: " + reason);
   res.status(code || 500).json({"error": message});
+}
 
 /* These "middleware" allow access to parameters passed in post requests. */
 app.use(bodyParser.json());
