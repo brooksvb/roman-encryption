@@ -78,7 +78,7 @@ app.post('/decrypt', upload.array(), function (req, res, next) {
   var array, threshhold;
 
   if (!req.body.array || !req.body.threshold) {
-    handleError(res, 'array or threshold is missing.', 'array and threshold are required.', 400);
+    handleError(res, 'array or threshold is missing.', 'array and threshold are required.\n' + format, 400);
   }
 
   try {
