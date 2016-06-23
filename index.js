@@ -11,8 +11,18 @@ var ip = require('dns').lookup(require('os').hostname(), function (err, add, fam
   console.log('addr: ' + add);
 });
 
-function encrypt(number, threshhold, length) {
-  return {message:'You entered number = ' + number + ' threshhold = ' + threshhold + ' length = ' + length};
+var defaultArraySize = 50;
+
+var format = 'Correct usage of encrypt: \n{number:*number to be encrypted, ' +
+  'threshold:*threshold to be used in encryption, size:*desired length of returned array (default:' + defaultArraySize + ')}\n' +
+  'Correct usage of decrypt: \n{array:*encrypted array to decrypt, threshold:*threshold that was used in encryption}';
+
+/**
+  Basic error handler taken from Heroku tutorial.
+**/
+function handleError(res, reason, message, code) {
+  console.log("ERROR: " + reason);
+  res.status(code || 500).json({"error": message});
 }
 
 /* These "middleware" allow access to parameters passed in post requests. */
@@ -29,33 +39,57 @@ app.post('/encrypt', upload.array(), function (req, res, next) {
   var threshhold = 'nothing';
   var size = 'nothing';
 
-  if (req.body.number) number = parseInt(req.body.number);
-  else res.send({message:'ERROR: You must supply a number.'})
+  if (!req.body.number || !req.body.threshold) {
+    handleError(res, 'Missing parameters.', 'Missing parameters.\n' + format, 400)
+  }
 
-  if (req.body.threshhold) threshhold = parseInt(req.body.threshhold);
-  else threshhold = 0;
+  /**
+    Second parameter in parseInt is the base you want to parse. Always specify this,
+    because if the number starts with a '0' it is possible for it to be parsed in
+    base-8.
+  */
+  if (number = parseInt(req.body.number, 10) === 'NaN') {
+    handleError(res, 'Number is invalid.', 'Number is invalid. Please use correct base-10 representation.', 400);
+  }
 
-  if (req.body.size) size = req.body.size;
-  else size = 50;
+  if ((threshold = parseInt(req.body.threshold, 10)) === 'NaN') {
+    handleError(res, 'Threshold is invalid.', 'Threshold is invalid. Please use correct base-10 representation.', 400);
+  }
+
+  if (req.body.size) {
+    if ((size = parseInt(req.body.size, 10)) === 'NaN') {
+      handleError(res, 'Size is Invalid.', 'Size is invalid. Please use correct base-10 representation.', 400);
+    }
+  } else size = defaultArraySize;
+
+  if (size < 3) {
+    handleError(res, 'Size is too small.', 'Size too small. Please use a value greater than or equal to 3.', 400);
+  }
 
   var array;
   array = roman.encrypt(number, threshhold, size);
 
 
   res.send({message:('Encrypted with number = ' + number + ' threshhold = ' +
-  threshhold + ' size = ' + size + '.'), encrypt:array});
+  threshhold + ' size = ' + size + '.'), encryptedNumber:array});
 });
 
 app.post('/decrypt', upload.array(), function (req, res, next) {
-  if (req.body) console.log('Received at decrypt hook: ' + JSON.stringify(req.body));
-  else console.log('Parsing error at decrypt hook.');
-
   var array, threshhold;
 
-  if (req.body.array) array = JSON.parse(req.body.array);
-  else req.send({message:'Missing array.'});
+  if (!req.body.array || !req.body.threshold) {
+    handleError(res, 'array or threshold is missing.', 'array and threshold are required.', 400);
+  }
 
-  if (req.body.threshhold) threshhold = req.body.threshhold;
+  try {
+    array = JSON.parse(req.body.array);
+  } catch (SyntaxError e) {
+    handleError(res, 'array was formatted incorrectly.', 'array was in invalid format. Make sure there is no trailing comma.', 400);
+  }
+
+  if ((threshold = parseInt(req.body.threshold)) === 'NaN') {
+    handleError(res, 'threshold invalid format.', '')
+  }
   else req.send({message:'Can\'t decrypt without threshhold.'});
 
   number = roman.decrypt(array, threshhold);

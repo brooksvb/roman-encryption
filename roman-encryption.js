@@ -10,14 +10,18 @@ module.exports = {
     var array = [];
     var last, next, total;
 
+
+    // For the length of the desired array
     for (var i = 0; i < size; i++) {
 
+      // First item will be random
       if (i === 0) {
 
         array.push(this.getrand());
         last = array[0];
         total = array[0];
 
+        // Last item will correct for any offset
       } else if (i === size - 1) {
 
         var offset = number - total;
@@ -28,6 +32,8 @@ module.exports = {
         }
         array.push(next);
 
+        // In order to ensure that the last item can correct for any offset in any case,
+        // the second-to-last item must meet a certain condition
       } else if (i === size - 2) {
 
         do {
@@ -41,6 +47,7 @@ module.exports = {
         total += next;
         last = next;
 
+        // Simply fill in the middle of the array with random numbers
       } else {
 
         next = this.getrand();
