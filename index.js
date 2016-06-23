@@ -7,6 +7,14 @@ var bodyParser = require('body-parser');
 var multer = require('multer');
 var upload = multer();
 
+var env = process.env.NODE_ENV || 'development';
+if ('development' == env) {
+   // configure stuff here
+    app.use(express.static(__dirname + '/'));
+} else {
+    app.use(express.static(__dirname + '/'));
+}
+
 var ip = require('dns').lookup(require('os').hostname(), function (err, add, fam) {
   console.log('addr: ' + add);
 });
@@ -23,7 +31,6 @@ var format = 'Correct usage of encrypt: \n{number:*number to be encrypted, ' +
 function handleError(res, reason, message, code) {
   console.log("ERROR: " + reason);
   res.status(code || 500).json({"error": message});
-}
 
 /* These "middleware" allow access to parameters passed in post requests. */
 app.use(bodyParser.json());
@@ -36,7 +43,7 @@ app.get('/', function (req, res) {
 // I don't entirely understand why upload.array() is necessary, but it is from multer
 app.post('/encrypt', upload.array(), function (req, res, next) {
   var number = 'nothing';
-  var threshhold = 'nothing';
+  var threshold = 'nothing';
   var size = 'nothing';
 
   if (!req.body.number || !req.body.threshold) {
@@ -67,8 +74,7 @@ app.post('/encrypt', upload.array(), function (req, res, next) {
   }
 
   var array;
-  array = roman.encrypt(number, threshhold, size);
-
+  array = roman.encrypt(number, threshold, size);
 
   res.send({message:('Encrypted with number = ' + number + ' threshhold = ' +
   threshhold + ' size = ' + size + '.'), encryptedNumber:array});
@@ -94,9 +100,24 @@ app.post('/decrypt', upload.array(), function (req, res, next) {
   if ((threshold = parseInt(req.body.threshold)) === 'NaN') {
     handleError(res, 'threshold invalid format.', '')
   }
-  else req.send({message:'Can\'t decrypt without threshhold.'});
 
-  number = roman.decrypt(array, threshhold);
+  res.send({message:('Encrypted with number = ' + number + ' threshold = ' +
+  threshold + ' size = ' + size + '.'), encrypt:array});
+});
+
+app.post('/decrypt', upload.array(), function (req, res, next) {
+  if (req.body) console.log('Received at decrypt hook: ' + JSON.stringify(req.body));
+  else console.log('Parsing error at decrypt hook.');
+
+  var array, threshold;
+
+  if (req.body.array) array = JSON.parse(req.body.array);
+  else res.send({message:'Missing array.'});
+
+  if (req.body.threshold) threshold = req.body.threshold;
+  else res.send({message:'Can\'t decrypt without threshold.'});
+
+  number = roman.decrypt(array, threshold);
 
   res.send({message:'Successfully decrypted.',number:this.number});
 });
