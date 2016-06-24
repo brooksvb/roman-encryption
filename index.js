@@ -37,9 +37,8 @@ function handleError(res, reason, message, code) {
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:true}))
 
-app.get('/', function (req, res) {
-  res.render(__dirname + '/index.html');
-});
+// This will map the root directory to my static folder, allowing someone to access index.html
+app.use(express.static(__dirname + '/static'));
 
 // I don't entirely understand why upload.array() is necessary, but it is from multer
 app.post('/encrypt', upload.array(), function (req, res, next) {
