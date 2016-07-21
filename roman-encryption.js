@@ -73,7 +73,6 @@ module.exports = {
     total = numbers[0];
     for (var i = 1; i < numbers.length; i++) {
       curr = numbers[i];
-      console.log('i = ' + i + ' curr = ' + curr + ' total = ' + total);
       if (curr > last && curr - last > threshold) {
         total -= 2 * last;
       }
