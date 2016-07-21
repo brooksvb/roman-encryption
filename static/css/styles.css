@@ -1,0 +1,25 @@
+.title {
+  font-family: 'Orbitron', sans-serif;
+  text-align: center;
+  font-size: 5em;
+}
+
+h1.title-small {
+  font-family: 'Orbitron', sans-serif;
+  text-align: center;
+  font-size: 4em;
+}
+
+h2.title-small {
+  font-family: 'Orbitron', sans-serif;
+  text-align: center;
+  font-size: 2em;
+}
+
+#intro {
+  margin-top: 5%;
+}
+
+p {
+  font-size: 1.3em;
+}
