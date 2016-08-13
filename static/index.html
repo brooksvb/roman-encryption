@@ -24,23 +24,29 @@
     <h1 class="title">roman-encryption</h1>
     <div id="intro" class="jumbotron text-center">
       <h2>This is a novel encryption API.</h2>
-      <h3>It was created as a personal project for practice, and I cannot guarantee
-        any real security value in the encryption algorithm.</h3>
+      <h3>
+        It was created as a personal project for practice, and I cannot guarantee
+        any real security value in the encryption algorithm.
+      </h3>
+      <a class="btn btn-default" id="jump_to_api" href="#api">jump to api <span id="chevron" class="glyphicon glyphicon-chevron-down"></span></a>
     </div>
-    <div id="api" class="well">
+    <div class="well">
       <h1 class="title-small">introduction</h1>
-      <p>roman-encryption is an encryption system loosely based off of the principle
+      <p>
+        roman-encryption is an encryption system loosely based off of the principle
         of roman numberals. When reading roman numerals, if a smaller value character
         comes before a larger value one, the smaller value is subtracted from the
         total value instead of added. You can read more <a href="https://en.wikipedia.org/wiki/Subtractive_notation" target="_blank">here.</a>
       </p>
-      <p>This principle drives roman-encryption: an encrypted number takes form of an
+      <p>
+        This principle drives roman-encryption: an encrypted number takes form of an
         array of numbers. In order to evaluate the array into a single number, the
         numbers are added up in the same fashion as roman numerals: if a number is
         smaller than the number after it, it is subtracted; otherwise, it is added
         to the total.
       </p>
-      <p>The security in roman-encryption comes from the addition of another factor:
+      <p>
+        The security in roman-encryption comes from the addition of another factor:
         a threshold. When evaluating an encrypted array, you first check if a number
         is smaller than the one after it; if it isn't, then you add the number.
         However, if the number is smaller than the one after it, you then check if
@@ -48,25 +54,76 @@
         a defined "threshold." Only if the difference is larger than the threshold,
         will you subtract that number from the total value.
       </p>
-      <p>This creates a varying and unpredictable change in the values of evaluated
+      <p>
+        This creates a varying and unpredictable change in the values of evaluated
         arrays. The threshold is used in creating the encrypted array, and without it,
         it is difficult to decrypt the same array. The real difficulty of breaking
         encryption without the threshold is unknown and untested; I am not knowledgable
         enough to perform any such evaluation.
       </p>
-      <p>I believe this encryption algorithm is a proof-of-concept for an additional
+      <p>
+        I believe this encryption algorithm is a proof-of-concept for an additional
         layer of security, perhaps for encrypting a key for a different encryption.
         One downside is that encrypted data will increase in size, so the practicality
         of this method is questionable. These same concepts should be applicable
         across number systems of differing bases as well.
       </p>
+
       <br>
       <hr>
       <br>
-      <h1 class="title">api</h1>
+
+      <h1 class="title" id="api">api</h1>
       <h1 class="title-small">encryption</h1>
       <hr>
-      
+      <p>
+        Send a POST request to roman-encryption.herokuapp.com/encrypt. Body data
+        should be in the format of "form-data."
+      </p>
+      <table class="table table-bordered">
+        <tr>
+          <th>Parameter</th>
+          <th>Definition</th>
+        </tr>
+        <tr>
+          <td>number</td>
+          <td>Value to be encrypted.</td>
+        </tr>
+        <tr>
+          <td>threshold</td>
+          <td>Threshold to use in encryption; needed in order to decrypt.</td>
+        </tr>
+        <tr>
+          <td>size (optional)</td>
+          <td>Length of desired encrypted array. Default value is 50.</td>
+        </tr>
+      </table>
+
+      <br>
+      <hr>
+
+      <h1 class="title-small">decryption</h1>
+      <hr>
+      <p>
+        Send a POST request to roman-encryption.herokuapp.com/decrypt. Body data
+         should be in the format of "form-data."
+      </p>
+      <table class="table table-bordered">
+        <tr>
+          <th>Parameter</th>
+          <th>Definition</th>
+        </tr>
+        <tr>
+          <td>array</td>
+          <td>Array of the encrypted number. (Parsed using JSON.parse(). Send as
+             a string in the format of [1, 5, 3, 8]. Spaces are negligible.)</td>
+        </tr>
+        <tr>
+          <td>threshold</td>
+          <td>Threshold used in encryption.</td>
+        </tr>
+      </table>
+
 
 
 

@@ -19,8 +19,26 @@ h2.title-small {
 #intro {
   margin-top: 5%;
   padding: 2% 10%;
+  position: relative;
+}
+
+#jump_to_api {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  font-size: 1.3em;
+}
+
+#chevron {
+  font-size: 1.1em;
+  position: relative;
+  top: 5px;
 }
 
 p {
   font-size: 1.3em;
+}
+
+table {
+  font-size: 1.2em;
 }
